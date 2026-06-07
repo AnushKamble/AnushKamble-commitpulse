@@ -677,7 +677,10 @@ async function fetchContributionsUncached(
   if (!res.ok) {
     throwIfRateLimited(res);
 
-    const bodyText = await res.text().catch(() => '');
+    const bodyText = await res.clone().text().catch((err) => {
+      console.warn('[GitHub API] Failed to read error response body:', err?.message ?? err);
+      return '';
+    });
 
     if (res.status === 401) {
       throw new Error(`GitHub PAT is invalid or missing. Response: ${bodyText || '<empty>'}`);
