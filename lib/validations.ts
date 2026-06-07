@@ -51,7 +51,7 @@ export function toValidHexColor(defaultColor: string) {
  */
 export function toGraceValue(val?: string): number {
   if (!val) return 1;
-  const parsed = parseFloat(val);
+  const parsed = Number(val);
   return isNaN(parsed) ? 1 : Math.max(0, Math.min(parsed, 7));
 }
 

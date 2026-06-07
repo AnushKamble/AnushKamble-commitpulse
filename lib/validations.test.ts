@@ -1556,8 +1556,8 @@ describe('toGraceValue — parseFloat standardization', () => {
     expect(toGraceValue('abc')).toBe(1);
   });
 
-  it('parseFloat behavior: "2abc" parses as 2 (not NaN like Number would return)', () => {
-    expect(toGraceValue('2abc')).toBe(2);
+  it('uses Number(): "2abc" returns default 1 (consistent with all other parsers)', () => {
+    expect(toGraceValue('2abc')).toBe(1);
   });
 
   it('returns 0 for grace=0 (strict mode)', () => {
@@ -1569,7 +1569,7 @@ describe('toGraceValue — parseFloat standardization', () => {
   });
 });
 
-describe('toGraceValue and toOpacityValue — consistent parseFloat behavior', () => {
+describe('toGraceValue (Number) vs toOpacityValue (parseFloat) — divergent behavior', () => {
   it('both return their default for undefined input', () => {
     expect(toGraceValue(undefined)).toBe(1);
     expect(toOpacityValue(undefined)).toBe(1.0);
@@ -1585,8 +1585,10 @@ describe('toGraceValue and toOpacityValue — consistent parseFloat behavior', (
     expect(toOpacityValue('abc')).toBe(1.0);
   });
 
-  it('both parse partial numeric strings via parseFloat — not NaN', () => {
-    expect(toGraceValue('2abc')).toBe(2);
+  it('toGraceValue rejects partial numeric strings via Number() — returns default', () => {
+    expect(toGraceValue('2abc')).toBe(1);
+  });
+  it('toOpacityValue still parses partial numeric strings via parseFloat', () => {
     expect(toOpacityValue('0.5abc')).toBe(0.5);
   });
 
