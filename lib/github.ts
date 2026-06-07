@@ -272,7 +272,10 @@ async function fetchGraphQLWithRetry(
   const body: unknown = await res
     .clone()
     .json()
-    .catch(() => null);
+    .catch((err) => {
+      console.warn('[GitHub API] Failed to parse rate-limit response body:', err?.message ?? err);
+      return null;
+    });
   const isBodyRateLimited =
     Array.isArray((body as { errors?: unknown })?.errors) &&
     (body as { errors: unknown[] }).errors.some(
